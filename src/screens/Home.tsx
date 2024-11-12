@@ -11,9 +11,6 @@ export function Home() {
     "Remada curvada",
     "Remada unilateral",
     "Levantamento terra",
-    "5",
-    "6",
-    "7",
   ]);
   const [groups, setGroups] = useState([
     "Costas",
@@ -32,7 +29,7 @@ export function Home() {
         renderItem={({ item }) => (
           <Group
             name={item}
-            isActive={groupSelected === item}
+            isActive={groupSelected.toLowerCase() === item.toLowerCase()}
             onPress={() => setGroupSelected(item)}
           />
         )}
