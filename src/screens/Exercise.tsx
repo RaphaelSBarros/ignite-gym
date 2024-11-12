@@ -5,13 +5,18 @@ import {
   VStack,
   Text,
   Image,
+  Box,
 } from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeft } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 
 import BodySvg from "@assets/body.svg";
+import SeriesSvg from "@assets/series.svg";
+import RepetitionSvg from "@assets/repetitions.svg";
+
 import { AppNavigateRoutesProps } from "@routes/app.routes";
+import { Button } from "@components/Button";
 
 export function Exercise() {
   const navigation = useNavigation<AppNavigateRoutesProps>();
@@ -49,20 +54,48 @@ export function Exercise() {
           </HStack>
         </HStack>
       </VStack>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 32 }}
+      >
+        <VStack p="$8">
+          <Image
+            source={{
+              uri: "https://static.wixstatic.com/media/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp/v1/fill/w_350,h_375,al_c/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp",
+            }}
+            alt="Exercício"
+            mb="$3"
+            resizeMode="cover"
+            rounded="$lg"
+            w="$full"
+            h="$80"
+          />
 
-      <VStack p="$8">
-        <Image
-          source={{
-            uri: "https://static.wixstatic.com/media/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp/v1/fill/w_350,h_375,al_c/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp",
-          }}
-          alt="Exercício"
-          mb="$3"
-          resizeMode="cover"
-          rounded="$lg"
-          w="$full"
-          h="$80"
-        />
-      </VStack>
+          <Box bg="$gray600" rounded="$md" pb="$4" px="$4">
+            <HStack
+              alignItems="center"
+              justifyContent="space-around"
+              mb="$6"
+              mt="$5"
+            >
+              <HStack>
+                <SeriesSvg />
+                <Text color="$gray200" ml="$2">
+                  3 séries
+                </Text>
+              </HStack>
+              <HStack>
+                <RepetitionSvg />
+                <Text color="$gray200" ml="$2">
+                  12 repetições
+                </Text>
+              </HStack>
+            </HStack>
+
+            <Button title="Marcar como realizado" />
+          </Box>
+        </VStack>
+      </ScrollView>
     </VStack>
   );
 }
