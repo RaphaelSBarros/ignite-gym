@@ -18,10 +18,14 @@ import { Controller, useForm } from "react-hook-form";
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm();
 
   function handleGoBack() {
     navigation.navigate("signIn");
+  }
+
+  function handleSignUp(data: any) {
+    console.log(data);
   }
 
   return (
@@ -55,7 +59,11 @@ export function SignUp() {
               control={control}
               name="name"
               render={({ field: { onChange, value } }) => (
-                <Input placeholder="Nome" onChange={onChange} value={value} />
+                <Input
+                  placeholder="Nome"
+                  onChangeText={onChange}
+                  value={value}
+                />
               )}
             />
 
@@ -67,7 +75,7 @@ export function SignUp() {
                   placeholder="E-mail"
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  onChange={onChange}
+                  onChangeText={onChange}
                   value={value}
                 />
               )}
@@ -80,7 +88,7 @@ export function SignUp() {
                 <Input
                   placeholder="Senha"
                   secureTextEntry
-                  onChange={onChange}
+                  onChangeText={onChange}
                   value={value}
                 />
               )}
@@ -93,13 +101,18 @@ export function SignUp() {
                 <Input
                   placeholder="Confirme a senha"
                   secureTextEntry
-                  onChange={onChange}
+                  onChangeText={onChange}
                   value={value}
+                  onSubmitEditing={handleSubmit(handleSignUp)}
+                  returnKeyType="send"
                 />
               )}
             />
 
-            <Button title="Criar e acessar" />
+            <Button
+              title="Criar e acessar"
+              onPress={handleSubmit(handleSignUp)}
+            />
           </Center>
 
           <Button
