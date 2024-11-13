@@ -5,6 +5,8 @@ import { UserPhoto } from "@components/UserPhoto";
 import { Center, Heading, Text, VStack } from "@gluestack-ui/themed";
 import { ScrollView, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+
 import { useState } from "react";
 
 export function Profile() {
@@ -24,7 +26,17 @@ export function Profile() {
       return;
     }
 
-    setUserPhoto(photoSelected.assets[0].uri);
+    const photoURI = photoSelected.assets[0].uri;
+
+    if (!photoURI) {
+      return;
+    }
+
+    const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
+      size: number;
+    };
+    console.log(photoInfo.size);
+    setUserPhoto(photoURI);
   }
 
   return (
