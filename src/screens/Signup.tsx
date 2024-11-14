@@ -52,17 +52,18 @@ export function SignUp() {
     navigation.navigate("signIn");
   }
 
-  function handleSignUp({ name, email, password }: FormDataProps) {
-    fetch("http://192.168.25.132:3333/users", {
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    const response = await fetch("http://192.168.25.132:3333/users", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ name, email, password }),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data));
+    });
+
+    const data = await response.json();
+    console.log(data);
   }
 
   return (
