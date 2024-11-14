@@ -1,3 +1,5 @@
+import { AppError } from "@utils/AppError";
+
 import axios from "axios";
 
 export const api = axios.create({
@@ -5,12 +7,14 @@ export const api = axios.create({
 });
 
 api.interceptors.response.use(
-  (response) => {
-    console.log("INTERCEPTOR RESPONSE =>", response);
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.log("INTERCEPTOR RESPONSE ERROR =>", error);
-    return Promise.reject(error);
+    if (error.response && error.response.data) {
+      return Promise.reject(new AppError(error.response.data.message));
+    } else {
+      return Promise.reject(
+        new AppError("Erro no servidor. Tente novamente mais tarde.")
+      );
+    }
   }
 );
