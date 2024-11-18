@@ -1,25 +1,24 @@
 import { ExerciseCard } from "@components/ExerciseCard";
 import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
-import { Heading, HStack, Text, VStack } from "@gluestack-ui/themed";
+import { Heading, HStack, Text, useToast, VStack } from "@gluestack-ui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigateRoutesProps } from "@routes/app.routes";
-import { useState } from "react";
+import { AppError } from "@utils/AppError";
+import { useEffect, useState } from "react";
 import { FlatList } from "react-native";
+import { api } from "../service/api";
+import { ToastMessage } from "@components/ToastMessage";
 
 export function Home() {
+  const toast = useToast();
   const [exercises, setExercises] = useState([
     "Puxada frontal",
     "Remada curvada",
     "Remada unilateral",
     "Levantamento terra",
   ]);
-  const [groups, setGroups] = useState([
-    "Costas",
-    "Bíceps",
-    "Tríceps",
-    "Ombro",
-  ]);
+  const [groups, setGroups] = useState<string[]>([]);
   const [groupSelected, setGroupSelected] = useState("Costas");
 
   const navigation = useNavigation<AppNavigateRoutesProps>();
@@ -27,6 +26,33 @@ export function Home() {
   function handleOpenExerciseDetails() {
     navigation.navigate("exercise");
   }
+
+  async function fetchGroups() {
+    try {
+      const response = await api.get("/groups");
+      setGroups(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os grupos musculares";
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
+  }
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   return (
     <VStack flex={1}>
