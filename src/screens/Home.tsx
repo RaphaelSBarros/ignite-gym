@@ -9,10 +9,11 @@ import { useCallback, useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import { api } from "../service/api";
 import { ToastMessage } from "@components/ToastMessage";
+import { ExerciseDTO } from "@dtos/ExerciseDTO";
 
 export function Home() {
   const toast = useToast();
-  const [exercises, setExercises] = useState<string[]>([]);
+  const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
   const [groups, setGroups] = useState<string[]>([]);
   const [groupSelected, setGroupSelected] = useState("costas");
 
@@ -48,8 +49,7 @@ export function Home() {
   async function fetchExercisesByGroup() {
     try {
       const response = await api.get(`/exercises/bygroup/${groupSelected}`);
-      console.log(response.data);
-      //setExercises(response.data);
+      setExercises(response.data);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -111,8 +111,8 @@ export function Home() {
 
         <FlatList
           data={exercises}
-          keyExtractor={(item) => item}
-          renderItem={() => (
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
             <ExerciseCard onPress={handleOpenExerciseDetails} />
           )}
           showsVerticalScrollIndicator={false}
