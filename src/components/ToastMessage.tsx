@@ -30,7 +30,7 @@ export function ToastMessage({
       bgColor={action === "success" ? "$green500" : "$red500"}
       mt="$10"
     >
-      <VStack space="xs" w="$full">
+      <VStack space="xs" w="$full" alignItems="center">
         <Pressable alignSelf="flex-end" onPress={onClose}>
           <Icon as={X} color="$coolGray50" size="md" />
         </Pressable>
