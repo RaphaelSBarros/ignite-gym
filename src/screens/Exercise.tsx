@@ -7,7 +7,7 @@ import {
   Image,
   Box,
 } from "@gluestack-ui/themed";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ArrowLeft } from "lucide-react-native";
 import { ScrollView, TouchableOpacity } from "react-native";
 
@@ -18,8 +18,18 @@ import RepetitionSvg from "@assets/repetitions.svg";
 import { AppNavigateRoutesProps } from "@routes/app.routes";
 import { Button } from "@components/Button";
 
+type RoutesParamsProps = {
+  exerciseId: string;
+};
+
 export function Exercise() {
   const navigation = useNavigation<AppNavigateRoutesProps>();
+
+  const route = useRoute();
+
+  const { exerciseId } = route.params as RoutesParamsProps;
+
+  console.log(exerciseId);
 
   function handleGoBack() {
     navigation.goBack();
