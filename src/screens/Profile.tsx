@@ -101,7 +101,15 @@ export function Profile() {
           ),
         });
       }
-      setUserPhoto(photoURI);
+
+      const fileExtension = photoURI.split(".").pop();
+
+      const photoFile = {
+        name: `${user.name}.${fileExtension}`.toLowerCase(),
+        uri: photoURI,
+        type: photoSelected.assets[0].mimeType,
+      };
+      console.log(photoFile);
     } catch (error) {
       console.log(error);
     }
