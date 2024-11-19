@@ -15,7 +15,7 @@ import { useAuth } from "@hooks/useAuth";
 type FormDataProps = {
   name: string;
   email: string;
-  passowrd: string;
+  password: string;
   old_password: string;
   confirm_password: string;
 };
@@ -27,7 +27,7 @@ export function Profile() {
 
   const toast = useToast();
   const { user } = useAuth();
-  const { control } = useForm<FormDataProps>({
+  const { control, handleSubmit } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
       email: user.email,
@@ -75,6 +75,10 @@ export function Profile() {
     }
   }
 
+  async function handleProfileUpdate(data: FormDataProps) {
+    console.log(data);
+  }
+
   return (
     <VStack flex={1}>
       <ScreenHeader title="Perfil" />
@@ -99,34 +103,32 @@ export function Profile() {
             </Text>
           </TouchableOpacity>
 
-          <Center w="$full" gap="$4">
-            <Controller
-              control={control}
-              name="name"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  bg="$gray600"
-                  placeholder="Nome"
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-            />
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                bg="$gray600"
+                placeholder="Nome"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { value, onChange } }) => (
-                <Input
-                  bg="$gray600"
-                  placeholder="E-mail"
-                  isReadOnly
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
-            />
-          </Center>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                bg="$gray600"
+                placeholder="E-mail"
+                isReadOnly
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
           <Heading
             alignSelf="flex-start"
@@ -139,16 +141,51 @@ export function Profile() {
             Alterar senha
           </Heading>
 
-          <Center w="$full" gap="$4">
-            <Input placeholder="Senha antiga" bg="$gray600" secureTextEntry />
-            <Input placeholder="Nova senha" bg="$gray600" secureTextEntry />
-            <Input
-              placeholder="Confirme a nova senha"
-              bg="$gray600"
-              secureTextEntry
+          <Center w="$full" gap="$2">
+            <Controller
+              control={control}
+              name="old_password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  bg="$gray600"
+                  placeholder="Senha antiga"
+                  secureTextEntry
+                  onChangeText={onChange}
+                />
+              )}
             />
 
-            <Button title="Atualizar" />
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  bg="$gray600"
+                  placeholder="Nova senha"
+                  secureTextEntry
+                  onChangeText={onChange}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="confirm_password"
+              render={({ field: { onChange } }) => (
+                <Input
+                  bg="$gray600"
+                  placeholder="Confirme a nova senha"
+                  secureTextEntry
+                  onChangeText={onChange}
+                />
+              )}
+            />
+
+            <Button
+              title="Atualizar"
+              mt="$4"
+              onPress={handleSubmit(handleProfileUpdate)}
+            />
           </Center>
         </Center>
       </ScrollView>
