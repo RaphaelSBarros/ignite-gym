@@ -107,11 +107,47 @@ export function Profile() {
       const photoFile = {
         name: `${user.name}.${fileExtension}`.toLowerCase(),
         uri: photoURI,
-        type: photoSelected.assets[0].mimeType,
-      };
-      console.log(photoFile);
+        type: `${photoSelected.assets[0].type}/${fileExtension}`,
+      } as any;
+
+      const userPhotoUploadForm = new FormData();
+      userPhotoUploadForm.append("avatar", photoFile);
+
+      await api.patch("/users/avatar", userPhotoUploadForm, {
+        headers: {
+          accept: "application/json",
+          "content-type": "multipart/form-data",
+        },
+      });
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="success"
+            title="Foto alterada com sucesso"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
     } catch (error) {
-      console.log(error);
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível alterar a foto";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
     }
   }
 
