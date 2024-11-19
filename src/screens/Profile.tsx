@@ -13,6 +13,8 @@ import { ToastMessage } from "@components/ToastMessage";
 import { Controller, useForm } from "react-hook-form";
 import { useAuth } from "@hooks/useAuth";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { api } from "../service/api";
+import { AppError } from "@utils/AppError";
 
 type FormDataProps = {
   name: string;
@@ -45,6 +47,7 @@ const profileSchema = yup.object({
 });
 
 export function Profile() {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/RaphaelSBarros.png"
   );
@@ -105,7 +108,42 @@ export function Profile() {
   }
 
   async function handleProfileUpdate(data: FormDataProps) {
-    console.log(data);
+    try {
+      setIsUpdating(true);
+
+      await api.put("/users", data);
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="success"
+            title="Perfil atualizado com sucesso!"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar os dados";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            action="error"
+            title={title}
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   }
 
   return (
@@ -217,6 +255,7 @@ export function Profile() {
               title="Atualizar"
               mt="$4"
               onPress={handleSubmit(handleProfileUpdate)}
+              isLoading={isUpdating}
             />
           </Center>
         </Center>
