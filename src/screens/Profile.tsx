@@ -9,6 +9,16 @@ import * as FileSystem from "expo-file-system";
 
 import { useState } from "react";
 import { ToastMessage } from "@components/ToastMessage";
+import { Controller, useForm } from "react-hook-form";
+import { useAuth } from "@hooks/useAuth";
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  passowrd: string;
+  old_password: string;
+  confirm_password: string;
+};
 
 export function Profile() {
   const [userPhoto, setUserPhoto] = useState(
@@ -16,6 +26,13 @@ export function Profile() {
   );
 
   const toast = useToast();
+  const { user } = useAuth();
+  const { control } = useForm<FormDataProps>({
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    },
+  });
 
   async function handleUserPhotoSelect() {
     try {
@@ -83,8 +100,32 @@ export function Profile() {
           </TouchableOpacity>
 
           <Center w="$full" gap="$4">
-            <Input value="Raphael Alexsandro" bg="$gray600" />
-            <Input value="raphael@email.com" bg="$gray600" isReadOnly />
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  bg="$gray600"
+                  placeholder="Nome"
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+            />
+
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  bg="$gray600"
+                  placeholder="E-mail"
+                  isReadOnly
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+            />
           </Center>
 
           <Heading
